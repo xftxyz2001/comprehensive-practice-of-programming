@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.page-template": "vue",
+        "*.layout-template": "vue",
+        "*.vue": "vue",
+        "math.h": "c",
+        "corecrt_math.h": "c",
+        "corecrt_math_defines.h": "c"
+    }
+}
