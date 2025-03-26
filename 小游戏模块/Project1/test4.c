@@ -28,12 +28,13 @@
 
 int main(int argc, char const *argv[])
 {
-    int num, N, guess;
+    int num = 0, N = 0, guess = 0;
     scanf("%d %d", &num, &N);
-    for (int i = 0; i < N; i++)
+    int i = 0;
+    for (i = 0; i <= N; i++)
     {
         scanf("%d", &guess);
-        if (guess < 0)
+        if (guess < 0 || i == N)
         {
             printf("Game Over\n");
             break;
