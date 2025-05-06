@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -g -O2 --apcs=interwork --split_sections --signed_chars -I.\CMSIS -I.\StdPeriph_Driver\inc -I.\StdPeriph_Driver\src -I.\
+-I "D:\4、新录制教程\STM32智能小车光盘\1、STM32智能小车视频教程38课\20、STM32智能小车视频教程 STM32编写第一个小车运动函数\小车前进函数\RTE"
+-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0
+-I C:\Keil_v5\ARM\CMSIS\Include
+-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD
+-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d "main.c"
