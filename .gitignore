@@ -451,3 +451,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+!嵌入式模块/1.TTL串口下载器驱动安装/CH340驱动包/*.exe
+!嵌入式模块/1.TTL串口下载器驱动安装/CH340驱动包/CH340/*.exe
+!嵌入式模块/1.TTL串口下载器驱动安装/CH340驱动包/CH340/*.dll
+!嵌入式模块/1.TTL串口下载器驱动安装/CH340驱动包/CH340/DRVSETUP64/*.exe
+!嵌入式模块/2.TTL下载方法/*.exe
