@@ -15,7 +15,7 @@ typedef struct
     int ownerID; // 对应用户ID
     char name[50];
     char description[200];
-    float price;
+    double price;
     int createTime;
     int isSold; // 0:未售 1:已售
 } Product;
@@ -33,8 +33,12 @@ typedef struct
 {
     int orderID;
     int userID;
+
     int productID;
-    float price;
+    int ownerID;           // 商品信息
+    char name[50];         // 商品信息
+    char description[200]; // 商品信息
+    double price;          // 商品信息
     int createTime;
 } Order;
 

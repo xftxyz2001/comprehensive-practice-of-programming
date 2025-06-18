@@ -8,6 +8,13 @@
         "corecrt_math_defines.h": "c",
         "stdio.h": "c",
         "interface.h": "c",
-        "stm32f10x.h": "c"
+        "stm32f10x.h": "c",
+        "iterator": "c",
+        "format": "c",
+        "initializer_list": "c",
+        "utility": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "store.h": "c"
     }
 }

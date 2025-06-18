@@ -2,38 +2,35 @@
 
 #define INITIAL_CAPACITY 10
 
-typedef struct
-{
-    User *data;
-    int size;
-    int capacity;
-} UserList;
+UserList *userList = NULL;
+ProductList *productList = NULL;
+MessageList *messageList = NULL;
+OrderList *orderList = NULL;
 
-UserList userList;
-
-int initUserList()
+UserList *createUserList()
 {
-    userList.capacity = INITIAL_CAPACITY;
-    userList.data = (User *)malloc(sizeof(User) * INITIAL_CAPACITY);
-    if (userList.data == NULL)
+    UserList *list = (UserList *)malloc(sizeof(UserList));
+    list->capacity = INITIAL_CAPACITY;
+    list->data = (User *)malloc(sizeof(User) * INITIAL_CAPACITY);
+    if (list->data == NULL)
     {
-        return 0;
+        return NULL;
     }
-    userList.size = 0;
-    return 1;
+    list->size = 0;
+    return list;
 }
 
 int ensureUserCapacity()
 {
-    if (userList.size >= userList.capacity)
+    if (userList->size >= userList->capacity)
     {
-        userList.capacity = userList.capacity * 1.5 + 1;
-        User *newData = realloc(userList.data, sizeof(User) * userList.capacity);
+        userList->capacity = userList->capacity * 1.5 + 1;
+        User *newData = realloc(userList->data, sizeof(User) * userList->capacity);
         if (newData == NULL)
         {
             return 0;
         }
-        userList.data = newData;
+        userList->data = newData;
     }
     return 1;
 }
@@ -41,11 +38,11 @@ int ensureUserCapacity()
 int generateNextUserID()
 {
     int maxID = 0;
-    for (int i = 0; i < userList.size; i++)
+    for (int i = 0; i < userList->size; i++)
     {
-        if (userList.data[i].userID > maxID)
+        if (userList->data[i].userID > maxID)
         {
-            maxID = userList.data[i].userID;
+            maxID = userList->data[i].userID;
         }
     }
     return maxID + 1;
@@ -55,34 +52,51 @@ int addUser(User u)
 {
     ensureUserCapacity();
     u.userID = generateNextUserID();
-    userList.data[userList.size++] = u;
+    userList->data[userList->size++] = u;
     return 1;
 }
 
 int deleteUserByID(int userID)
 {
-    for (int i = 0; i < userList.size; i++)
+    for (int i = 0; i < userList->size; i++)
     {
-        if (userList.data[i].userID == userID)
+        if (userList->data[i].userID == userID)
         {
-            for (int j = i; j < userList.size - 1; j++)
+            for (int j = i; j < userList->size - 1; j++)
             {
-                userList.data[j] = userList.data[j + 1];
+                userList->data[j] = userList->data[j + 1];
             }
-            userList.size--;
+            userList->size--;
             return 1;
         }
     }
     return 0;
 }
 
+UserList *getUserList()
+{
+    return userList;
+}
+
+User *findUserByID(int userID)
+{
+    for (int i = 0; i < userList->size; i++)
+    {
+        if (userList->data[i].userID == userID)
+        {
+            return &(userList->data[i]);
+        }
+    }
+    return NULL;
+}
+
 User *findUserByUsername(char *username)
 {
-    for (int i = 0; i < userList.size; i++)
+    for (int i = 0; i < userList->size; i++)
     {
-        if (strcmp(userList.data[i].username, username) == 0)
+        if (strcmp(userList->data[i].username, username) == 0)
         {
-            return &(userList.data[i]);
+            return &(userList->data[i]);
         }
     }
     return NULL;
@@ -95,7 +109,6 @@ int loadUsers()
     {
         return 0;
     }
-    initUserList();
     User u;
     while (fread(&u, sizeof(User), 1, file))
     {
@@ -112,9 +125,9 @@ int saveUsers()
     {
         return 0;
     }
-    for (int i = 0; i < userList.size; i++)
+    for (int i = 0; i < userList->size; i++)
     {
-        fwrite(&userList.data[i], sizeof(User), 1, file);
+        fwrite(&userList->data[i], sizeof(User), 1, file);
     }
     fclose(file);
     return 1;
@@ -122,46 +135,38 @@ int saveUsers()
 
 int freeUserList()
 {
-    free(userList.data);
-    userList.data = NULL;
+    free(userList->data);
+    userList->data = NULL;
 
-    userList.size = 0;
-    userList.capacity = 0;
+    userList->size = 0;
+    userList->capacity = 0;
     return 1;
 }
 
-typedef struct
+ProductList *createProductList()
 {
-    Product *data;
-    int size;
-    int capacity;
-} ProductList;
-
-ProductList productList;
-
-int initProductList()
-{
-    productList.capacity = INITIAL_CAPACITY;
-    productList.data = (Product *)malloc(sizeof(Product) * productList.capacity);
-    if (productList.data == NULL)
+    ProductList *list = (ProductList *)malloc(sizeof(ProductList));
+    list->capacity = INITIAL_CAPACITY;
+    list->data = (Product *)malloc(sizeof(Product) * INITIAL_CAPACITY);
+    if (list->data == NULL)
     {
-        return 0;
+        return NULL;
     }
-    productList.size = 0;
-    return 1;
+    list->size = 0;
+    return list;
 }
 
 int ensureProductCapacity()
 {
-    if (productList.size >= productList.capacity)
+    if (productList->size >= productList->capacity)
     {
-        productList.capacity = productList.capacity * 1.5 + 1;
-        Product *newData = realloc(productList.data, sizeof(Product) * productList.capacity);
+        productList->capacity = productList->capacity * 1.5 + 1;
+        Product *newData = realloc(productList->data, sizeof(Product) * productList->capacity);
         if (newData == NULL)
         {
             return 0;
         }
-        productList.data = newData;
+        productList->data = newData;
     }
     return 1;
 }
@@ -169,11 +174,11 @@ int ensureProductCapacity()
 int generateNextProductID()
 {
     int maxID = 0;
-    for (int i = 0; i < productList.size; i++)
+    for (int i = 0; i < productList->size; i++)
     {
-        if (productList.data[i].productID > maxID)
+        if (productList->data[i].productID > maxID)
         {
-            maxID = productList.data[i].productID;
+            maxID = productList->data[i].productID;
         }
     }
     return maxID + 1;
@@ -183,25 +188,70 @@ int addProduct(Product p)
 {
     ensureProductCapacity();
     p.productID = generateNextProductID();
-    productList.data[productList.size++] = p;
+    productList->data[productList->size++] = p;
     return 1;
 }
 
 int deleteProductByID(int productID)
 {
-    for (int i = 0; i < productList.size; i++)
+    for (int i = 0; i < productList->size; i++)
     {
-        if (productList.data[i].productID == productID)
+        if (productList->data[i].productID == productID)
         {
-            for (int j = i; j < productList.size - 1; j++)
+            for (int j = i; j < productList->size - 1; j++)
             {
-                productList.data[j] = productList.data[j + 1];
+                productList->data[j] = productList->data[j + 1];
             }
-            productList.size--;
+            productList->size--;
             return 1;
         }
     }
     return 0;
+}
+
+ProductList *getProductList()
+{
+    return productList;
+}
+
+ProductList *getOnSaleProductList()
+{
+    ProductList *list = createProductList();
+    for (int i = 0; i < productList->size; i++)
+    {
+        if (productList->data[i].isSold == 0)
+        {
+            ensureProductCapacity(list);
+            list->data[list->size++] = productList->data[i];
+        }
+    }
+    return list;
+}
+
+ProductList *getMyPublishProductList(int userID)
+{
+    ProductList *list = createProductList();
+    for (int i = 0; i < productList->size; i++)
+    {
+        if (productList->data[i].ownerID == userID)
+        {
+            ensureProductCapacity(list);
+            list->data[list->size++] = productList->data[i];
+        }
+    }
+    return list;
+}
+
+Product *findProductByID(int productID)
+{
+    for (int i = 0; i < productList->size; i++)
+    {
+        if (productList->data[i].productID == productID)
+        {
+            return &(productList->data[i]);
+        }
+    }
+    return NULL;
 }
 
 int loadProducts()
@@ -211,7 +261,6 @@ int loadProducts()
     {
         return 0;
     }
-    initProductList();
     Product p;
     while (fread(&p, sizeof(Product), 1, file))
     {
@@ -229,9 +278,9 @@ int saveProducts()
 
         return 0;
     }
-    for (int i = 0; i < productList.size; i++)
+    for (int i = 0; i < productList->size; i++)
     {
-        fwrite(&productList.data[i], sizeof(Product), 1, file);
+        fwrite(&productList->data[i], sizeof(Product), 1, file);
     }
     fclose(file);
     return 1;
@@ -239,46 +288,38 @@ int saveProducts()
 
 int freeProductList()
 {
-    free(productList.data);
-    productList.data = NULL;
+    free(productList->data);
+    productList->data = NULL;
 
-    productList.size = 0;
-    productList.capacity = 0;
+    productList->size = 0;
+    productList->capacity = 0;
     return 1;
 }
 
-typedef struct
+MessageList *createMessageList()
 {
-    Message *data;
-    int size;
-    int capacity;
-} MessageList;
-
-MessageList messageList;
-
-int initMessageList()
-{
-    messageList.capacity = INITIAL_CAPACITY;
-    messageList.data = (Message *)malloc(sizeof(Message) * messageList.capacity);
-    if (messageList.data == NULL)
+    MessageList *list = (MessageList *)malloc(sizeof(MessageList));
+    list->capacity = INITIAL_CAPACITY;
+    list->data = (Message *)malloc(sizeof(Message) * INITIAL_CAPACITY);
+    if (list->data == NULL)
     {
-        return 0;
+        return NULL;
     }
-    messageList.size = 0;
-    return 1;
+    list->size = 0;
+    return list;
 }
 
 int ensureMessageCapacity()
 {
-    if (messageList.size >= messageList.capacity)
+    if (messageList->size >= messageList->capacity)
     {
-        messageList.capacity = messageList.capacity * 1.5 + 1;
-        Message *newData = realloc(messageList.data, sizeof(Message) * messageList.capacity);
+        messageList->capacity = messageList->capacity * 1.5 + 1;
+        Message *newData = realloc(messageList->data, sizeof(Message) * messageList->capacity);
         if (newData == NULL)
         {
             return 0;
         }
-        messageList.data = newData;
+        messageList->data = newData;
     }
     return 1;
 }
@@ -286,11 +327,11 @@ int ensureMessageCapacity()
 int generateNextMessageID()
 {
     int maxID = 0;
-    for (int i = 0; i < messageList.size; i++)
+    for (int i = 0; i < messageList->size; i++)
     {
-        if (messageList.data[i].messageID > maxID)
+        if (messageList->data[i].messageID > maxID)
         {
-            maxID = messageList.data[i].messageID;
+            maxID = messageList->data[i].messageID;
         }
     }
     return maxID + 1;
@@ -300,8 +341,30 @@ int addMessage(Message m)
 {
     ensureMessageCapacity();
     m.messageID = generateNextMessageID();
-    messageList.data[messageList.size++] = m;
+    messageList->data[messageList->size++] = m;
     return 1;
+}
+
+int deleteMessageByID(int messageID)
+{
+    for (int i = 0; i < messageList->size; i++)
+    {
+        if (messageList->data[i].messageID == messageID)
+        {
+            for (int j = i; j < messageList->size - 1; j++)
+            {
+                messageList->data[j] = messageList->data[j + 1];
+            }
+            messageList->size--;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+MessageList *getMessageList()
+{
+    return messageList;
 }
 
 int loadMessages()
@@ -311,7 +374,6 @@ int loadMessages()
     {
         return 0;
     }
-    initMessageList();
     Message m;
     while (fread(&m, sizeof(Message), 1, file))
     {
@@ -328,9 +390,9 @@ int saveMessages()
     {
         return 0;
     }
-    for (int i = 0; i < messageList.size; i++)
+    for (int i = 0; i < messageList->size; i++)
     {
-        fwrite(&messageList.data[i], sizeof(Message), 1, file);
+        fwrite(&messageList->data[i], sizeof(Message), 1, file);
     }
     fclose(file);
     return 1;
@@ -338,46 +400,38 @@ int saveMessages()
 
 int freeMessageList()
 {
-    free(messageList.data);
-    messageList.data = NULL;
+    free(messageList->data);
+    messageList->data = NULL;
 
-    messageList.size = 0;
-    messageList.capacity = 0;
+    messageList->size = 0;
+    messageList->capacity = 0;
     return 1;
 }
 
-typedef struct
+OrderList *createOrderList()
 {
-    Order *data;
-    int size;
-    int capacity;
-} OrderList;
-
-OrderList orderList;
-
-int initOrderList()
-{
-    orderList.capacity = INITIAL_CAPACITY;
-    orderList.data = (Order *)malloc(sizeof(Order) * orderList.capacity);
-    if (orderList.data == NULL)
+    OrderList *list = (OrderList *)malloc(sizeof(OrderList));
+    list->capacity = INITIAL_CAPACITY;
+    list->data = (Order *)malloc(sizeof(Order) * INITIAL_CAPACITY);
+    if (list->data == NULL)
     {
-        return 0;
+        return NULL;
     }
-    orderList.size = 0;
-    return 1;
+    list->size = 0;
+    return list;
 }
 
 int ensureOrderCapacity()
 {
-    if (orderList.size >= orderList.capacity)
+    if (orderList->size >= orderList->capacity)
     {
-        orderList.capacity = orderList.capacity * 1.5 + 1;
-        Order *newData = realloc(orderList.data, sizeof(Order) * orderList.capacity);
+        orderList->capacity = orderList->capacity * 1.5 + 1;
+        Order *newData = realloc(orderList->data, sizeof(Order) * orderList->capacity);
         if (newData == NULL)
         {
             return 0;
         }
-        orderList.data = newData;
+        orderList->data = newData;
     }
     return 1;
 }
@@ -385,11 +439,11 @@ int ensureOrderCapacity()
 int generateNextOrderID()
 {
     int maxID = 0;
-    for (int i = 0; i < orderList.size; i++)
+    for (int i = 0; i < orderList->size; i++)
     {
-        if (orderList.data[i].orderID > maxID)
+        if (orderList->data[i].orderID > maxID)
         {
-            maxID = orderList.data[i].orderID;
+            maxID = orderList->data[i].orderID;
         }
     }
     return maxID + 1;
@@ -399,8 +453,44 @@ int addOrder(Order o)
 {
     ensureOrderCapacity();
     o.orderID = generateNextOrderID();
-    orderList.data[orderList.size++] = o;
+    orderList->data[orderList->size++] = o;
     return 1;
+}
+
+int deleteOrderByID(int orderID)
+{
+    for (int i = 0; i < orderList->size; i++)
+    {
+        if (orderList->data[i].orderID == orderID)
+        {
+            for (int j = i; j < orderList->size - 1; j++)
+            {
+                orderList->data[j] = orderList->data[j + 1];
+            }
+            orderList->size--;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+OrderList *getOrderList()
+{
+    return orderList;
+}
+
+OrderList *getMyPurchaseList(int userID)
+{
+    OrderList *list = createOrderList();
+    for (int i = 0; i < orderList->size; i++)
+    {
+        if (orderList->data[i].userID == userID)
+        {
+            ensureOrderCapacity(list);
+            list->data[list->size++] = orderList->data[i];
+        }
+    }
+    return list;
 }
 
 int loadOrders()
@@ -410,7 +500,6 @@ int loadOrders()
     {
         return 0;
     }
-    initOrderList();
     Order o;
     while (fread(&o, sizeof(Order), 1, file))
     {
@@ -427,9 +516,9 @@ int saveOrders()
     {
         return 0;
     }
-    for (int i = 0; i < orderList.size; i++)
+    for (int i = 0; i < orderList->size; i++)
     {
-        fwrite(&orderList.data[i], sizeof(Order), 1, file);
+        fwrite(&orderList->data[i], sizeof(Order), 1, file);
     }
     fclose(file);
     return 1;
@@ -437,33 +526,28 @@ int saveOrders()
 
 int freeOrderList()
 {
-    free(orderList.data);
-    orderList.data = NULL;
+    free(orderList->data);
+    orderList->data = NULL;
 
-    orderList.size = 0;
-    orderList.capacity = 0;
+    orderList->size = 0;
+    orderList->capacity = 0;
     return 1;
 }
 
 int initStore()
 {
     printf("Мгдижа...");
-    if (!loadUsers())
-    {
-        return 0;
-    }
-    if (!loadProducts())
-    {
-        return 0;
-    }
-    if (!loadMessages())
-    {
-        return 0;
-    }
-    if (!loadOrders())
-    {
-        return 0;
-    }
+    userList = createUserList();
+    loadUsers();
+
+    productList = createProductList();
+    loadProducts();
+
+    messageList = createMessageList();
+    loadMessages();
+
+    orderList = createOrderList();
+    loadOrders();
     return 1;
 }
 
