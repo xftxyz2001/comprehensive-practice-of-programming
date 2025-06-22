@@ -43,6 +43,7 @@ typedef struct
 int addMessage(Message m);
 int deleteMessageByID(int messageID);
 MessageList *getMessageList();
+MessageList *findMessageByProductID(int productID);
 
 typedef struct
 {

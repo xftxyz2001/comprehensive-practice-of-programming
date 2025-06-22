@@ -110,9 +110,21 @@ int loadUsers()
         return 0;
     }
     User u;
+    int count = 0;
     while (fread(&u, sizeof(User), 1, file))
     {
         addUser(u);
+        count++;
+    }
+    // 没有用户，添加一个 admin/admin 的管理员用户
+    if (count == 0)
+    {
+        User admin;
+        admin.userID = 0;
+        strcpy(admin.username, "admin");
+        strcpy(admin.password, "admin");
+        admin.isAdmin = 1;
+        addUser(admin);
     }
     fclose(file);
     return 1;
@@ -365,6 +377,20 @@ int deleteMessageByID(int messageID)
 MessageList *getMessageList()
 {
     return messageList;
+}
+
+MessageList *findMessageByProductID(int productID)
+{
+    MessageList *list = createMessageList();
+    for (int i = 0; i < messageList->size; i++)
+    {
+        if (messageList->data[i].productID == productID)
+        {
+            ensureMessageCapacity(list);
+            list->data[list->size++] = messageList->data[i];
+        }
+    }
+    return list;
 }
 
 int loadMessages()

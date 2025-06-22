@@ -1,9 +1,15 @@
 #include "menu.h"
 
-User *currentUser;
+User *currentUser = NULL;
 
 int buyProduct(Product *product)
 {
+    if (product->isSold)
+    {
+        printf("商品已售出。\n");
+        return 0;
+    }
+
     Order o;
     o.userID = currentUser->userID;
     o.productID = product->productID;
@@ -17,6 +23,26 @@ int buyProduct(Product *product)
         return 1;
     }
     return 0;
+}
+
+// 评论
+void addComment(Product *product)
+{
+    Message message;
+    message.userID = currentUser->userID;
+    message.productID = product->productID;
+    printf("输入评论内容: ");
+    scanf("%s", message.message);
+
+    if (addMessage(message))
+    {
+        printf("评论成功！\n");
+    }
+    else
+    {
+        printf("评论失败！\n");
+    }
+    _sleep(500);
 }
 
 void productDetail(Product *product)
@@ -33,7 +59,15 @@ void productDetail(Product *product)
         printf("发布者：%s\n", owner ? owner->username : "?");
         printf("状态：%s\n", product->isSold ? "售出" : "在售");
 
-        // TODO: 展示评论
+        MessageList *msgs = findMessageByProductID(product->productID);
+        printf("-----------------评论-----------------\n");
+        for (int i = 0; i < msgs->size; i++)
+        {
+            Message m = msgs->data[i];
+            printf("用户：%s\n", findUserByID(m.userID)->username);
+            printf("内容：%s\n", m.message);
+            printf("\n");
+        }
 
         printf("1. 购买\n");
         printf("2. 评论\n");
@@ -71,7 +105,7 @@ void productDetail(Product *product)
         }
         break;
         case 2:
-            // TODO: 评论
+            addComment(product);
             break;
         case 0:
             break;
@@ -130,7 +164,7 @@ void publishProduct()
     printf("输入商品名: ");
     scanf("%s", product.name);
     printf("输入价格: ");
-    scanf("%lf", product.price);
+    scanf("%lf", &product.price);
     printf("输入描述: ");
     scanf("%s", product.description);
 
