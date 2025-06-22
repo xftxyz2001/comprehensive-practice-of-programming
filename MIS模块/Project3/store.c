@@ -107,24 +107,18 @@ int loadUsers()
     FILE *file = fopen("users.bin", "rb");
     if (file == NULL)
     {
-        return 0;
-    }
-    User u;
-    int count = 0;
-    while (fread(&u, sizeof(User), 1, file))
-    {
-        addUser(u);
-        count++;
-    }
-    // 没有用户，添加一个 admin/admin 的管理员用户
-    if (count == 0)
-    {
+        // 没有用户，添加一个 admin/admin 的管理员用户
         User admin;
-        admin.userID = 0;
         strcpy(admin.username, "admin");
         strcpy(admin.password, "admin");
         admin.isAdmin = 1;
         addUser(admin);
+        return 0;
+    }
+    User u;
+    while (fread(&u, sizeof(User), 1, file))
+    {
+        addUser(u);
     }
     fclose(file);
     return 1;
