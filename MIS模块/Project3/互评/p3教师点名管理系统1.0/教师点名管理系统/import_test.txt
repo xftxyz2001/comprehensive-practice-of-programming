@@ -1,0 +1,7 @@
+123 2024-06-01 Present
+122 2024-06-01 Absent
+1003 2024-06-01 Late
+9999 2024-06-01 Present   // Invalid student ID
+1001 2024-06-01 Holiday   // Invalid status
+1002 20240601 Present     // Invalid date format
+1001 2024-06-01           // Missing status 

@@ -1,0 +1,2 @@
+Date: 2025-06-19, Student ID: 123, Name: mingzi123, Class: mingzi123, Status: present
+Date: 2025-06-19, Student ID: 123, Name: mingzi123, Class: mingzi123, Status: absent
